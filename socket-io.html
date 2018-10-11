@@ -20,13 +20,14 @@ Polymer 1.0 element for socket.io apis
           type: String,
           value: 'http://localhost:8080'
         },
+
         isConnected: {
           type: Boolean,
           value: null
         }
       },
+
       ready: function(){
-        console.log("Connection In Progress");
         var head = document.getElementsByTagName("head")[0] || document.documentElement;
         var script = document.createElement("script");
         script.src = this._getClientUrl(this.endpoint);
@@ -41,9 +42,7 @@ Polymer 1.0 element for socket.io apis
             done = true;
 
             _this.scriptLoaded = true;
-            console.log('Finished Loading Socket-IO Script');
             if (_this.awaitingConnect) {
-              console.log("Connecting Socket");
               _this.connect();
             }
             // Handle memory leak in IE
@@ -58,6 +57,7 @@ Polymer 1.0 element for socket.io apis
         // This arises when a base node is used (#2709 and #4378).
         head.insertBefore( script, head.firstChild );
       },
+
       _getClientUrl: function (endpoint) {
         if (endpoint.slice(-1) === '/') {
           return endpoint + 'socket.io/socket.io.js';
@@ -74,14 +74,12 @@ Polymer 1.0 element for socket.io apis
        */
       emit: function(event, data)
       {
-        try
-        {
-          if(this.socket) this.socket.emit(event, data);
-        }catch(error)
-        {
-          console.log("Failed to send message: "+error);
+        if (!this.socket) {
+          throw new Error('no socket');
         }
+        this.socket.emit(event, data);
       },
+
       /**
        * Update the message within state
        *
@@ -94,6 +92,7 @@ Polymer 1.0 element for socket.io apis
           this.outMessage = message;
         }
       },
+      
       /**
        * The connect method triggers connection to the socket.io server
        *
@@ -102,7 +101,6 @@ Polymer 1.0 element for socket.io apis
       connect: function()
       {
         var _this = this;
-        console.log('Connection in progress');
         if (this.scriptLoaded) {
           this.disconnect();
           this.socket = io.connect(this.endpoint);
@@ -112,10 +110,10 @@ Polymer 1.0 element for socket.io apis
           });
           this.fire('connected');
         } else {
-          console.log('Loading ClientSideScript');
           this.awaitingConnect = true;
         }
       },
+
       /**
        * The disconnect method triggers disconnection from the socket.io server
        *
