@@ -23,7 +23,8 @@ Polymer 1.0 element for socket.io apis
 
         isConnected: {
           type: Boolean,
-          value: null
+          value: null,
+          notify: true,
         }
       },
 
@@ -92,7 +93,7 @@ Polymer 1.0 element for socket.io apis
           this.outMessage = message;
         }
       },
-      
+
       /**
        * The connect method triggers connection to the socket.io server
        *
