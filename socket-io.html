@@ -133,7 +133,7 @@ Polymer 1.0 element for socket.io apis
        */
       disconnect: function ()
       {
-        if (this.socket != undefined && !this.isConnected)
+        if (this.socket != undefined && this.isConnected)
         {
           try{
             this.socket.disconnect();
