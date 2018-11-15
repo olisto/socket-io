@@ -21,11 +21,16 @@ Polymer 1.0 element for socket.io apis
           value: 'http://localhost:8080'
         },
 
+        extraHeaders: {
+          type: Object,
+          value: null,
+        },
+
         isConnected: {
           type: Boolean,
           value: null,
           notify: true,
-        }
+        },
       },
 
       ready: function(){
@@ -104,7 +109,13 @@ Polymer 1.0 element for socket.io apis
         var _this = this;
         if (this.scriptLoaded) {
           this.disconnect();
-          this.socket = io.connect(this.endpoint);
+          var socket;
+          if (this.extraHeaders) {
+            socket = io({transportOptions:{polling:{extraHeaders: this.extraHeaders}}});
+          } else {
+            socket = io;
+          }
+          this.socket = socket.connect(this.endpoint);
           this.isConnected = true;
           this.events.forEach(function(event){
             _this.socket.on(event.event, event.onEvent);
