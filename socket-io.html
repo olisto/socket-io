@@ -111,7 +111,7 @@ Polymer 1.0 element for socket.io apis
           this.disconnect();
           var socket;
           if (this.extraHeaders) {
-            socket = io({transportOptions:{polling:{extraHeaders: this.extraHeaders}}});
+            socket = io(this.endpoint, {transportOptions:{polling:{extraHeaders: this.extraHeaders}}});
           } else {
             socket = io;
           }
